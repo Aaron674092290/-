@@ -35,7 +35,7 @@ module.exports = {
                 use: 'html-loader'
             },
             {
-                test: /\.(png|jpg|jpeg|gif|bmp|svg)$/,
+                test: /\.(png|jpg|jpeg|gif|bmp|svg|woff|ttf)$/,
                 use: [
                     // 计算机中存储的单位：Bit，Byte，KB，MB，GB，TB
                     // 这里limit选项需要配置的单位是字节(byte)，一般配置8到10KB
