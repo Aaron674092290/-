@@ -62,9 +62,17 @@ export default {
            // 先校验表单, 再提交
         this.$refs[formName].validate((result) => {
           if (result) {
-            this.$http.post(this.$api.login,this.user).then(rsp=>console.log(rsp.data.message.realname));
+            this.$http.post(this.$api.login,this.user).then(rsp=>{
+                let {status,message}=rsp.data;
+                if(status==0){
+                    localStorage.setItem("user",JSON.stringify(message));
+                     this.$router.push({name:"a"});                    
+                }else{
+                    alert('账号或者密码错误');
+                }
+            });
           } else {
-            alert('请重试');
+            alert("请重试");
           }
         });
       },

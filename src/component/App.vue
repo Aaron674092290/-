@@ -14,11 +14,12 @@
         },
         created(){
             /* 测试 */
-            this.$http.get(this.$api.islogin).then(rsp=>console.log(rsp.data.code));
         }
     }
 </script>
 
 <style scoped>
-
+    section{
+        
+    }
 </style>
