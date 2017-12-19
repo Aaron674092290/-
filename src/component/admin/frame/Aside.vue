@@ -1,5 +1,6 @@
 <template>
     <div class="aside">
+        
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
@@ -8,13 +9,17 @@
       background-color="#2c3e50"
       text-color="#fff"
       active-text-color="#ffd04b">
+      <!-- logo -->
+        <div class="logo">
+            <img src="../../../img/logo.png" alt="">
+        </div>
       <el-submenu v-for="item in menuList" :key="item.title" :index="item.title">
         <template slot="title">
           <i class="el-icon-menu"></i>
           <span>{{item.title}}</span>
         </template>
           <el-menu-item v-for="subItem in item.children" :key="subItem.title" :index="subItem.title">
-              {{subItem.title}}
+              <router-link :to="subItem.path">{{subItem.title}}</router-link>
           </el-menu-item>
          
       </el-submenu>
@@ -63,9 +68,9 @@ export default {
                 {
                     title:"购物商城",
                     children:[
-                        {title:"内容管理",path:"/"},
-                        {title:"类别管理",path:"/"},
-                        {title:"评论管理",path:"/"},
+                        {title:"商品列表",path:"/goods/content/list"},
+                        {title:"分类列表",path:"/goods/category/list"},
+                        {title:"评论列表",path:"/goods/comment/list"},
                     ]
                 },
                 {
@@ -89,12 +94,22 @@ export default {
 };
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+.logo{
+    padding-top: 10px;
+}
 .aside {
   height: 100%;
   .el-menu {
     height: 100%;
     text-align: left;
+    .el-menu-item{
+        a{
+            color:#83c1ec;
+            text-decoration: none;
+        }
+    }
   }
 }
+
 </style>

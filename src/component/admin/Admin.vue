@@ -23,7 +23,13 @@ export default {
     components:{
         'app-aside':AsideComponent,
         'app-header':HeaderComponent
-    }
+    },
+    /* 登录才可以跳到主页 第一种文字 */
+    // beforeCreate(){
+    //     if(!localStorage.getItem("user")){
+    //         this.$router.push({name:"l"});
+    //     }
+    // },
 };
 </script>
 
@@ -46,9 +52,7 @@ export default {
 }
 
 .el-main {
-  background-color: #e9eef3;
+  background-color: #fff;
   color: #333;
-  text-align: center;
-  line-height: 160px;
 }
 </style>
