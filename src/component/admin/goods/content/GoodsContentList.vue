@@ -10,7 +10,7 @@
          <section class="list_util">
                     <!-- 按钮 -->
                 <div class="list_util_btns">
-                        <el-button size="small" type="primary" plain icon="el-icon-circle-plus-outline">添加</el-button>
+                        <el-button size="small" type="primary" plain icon="el-icon-circle-plus-outline" @click="add">添加</el-button>
                         <el-button size="small" type="primary" plain icon="el-icon-check">全选</el-button>
                         <el-button size="small" type="primary" plain icon="el-icon-delete">删除</el-button>
                 </div>
@@ -28,6 +28,11 @@
                     <el-table-column prop="stock_quantity" label="库存" width="120" show-overflow-tooltip></el-table-column>
                     <el-table-column prop="market_price" label="市场价" width="120" show-overflow-tooltip> </el-table-column>
                     <el-table-column prop="sell_price"  label="销售价" width="120"  show-overflow-tooltip>  </el-table-column>
+
+                    <el-tooltip placement="top">
+                    <div slot="content">多行信息<br/>第二行信息</div>
+                    <el-button>Top center</el-button>
+                    </el-tooltip>
 
                     <el-table-column label="属性" width="120" show-overflow-tooltip> 
                         <template slot-scope="scope">
@@ -78,7 +83,9 @@ export default {
     };
   },
   methods:{
-    
+    add(){
+        this.$router.push({name:"gcta"})
+    },
 
       getTableList(){
           this.$http.get(this.$api.gsList,{params:this.query})

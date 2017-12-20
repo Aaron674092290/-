@@ -27,33 +27,31 @@
                         <el-switch v-model="ruleForm.status"></el-switch>                   
                     </el-form-item>
                     <el-form-item label="推荐类型" prop="delivery">
-                        <el-switch v-model="ruleForm.is_slide"></el-switch>
-                        <el-switch v-model="ruleForm.is_top"></el-switch>
-                        <el-switch v-model="ruleForm.is_hot"></el-switch>
+                        <el-switch v-model="ruleForm.is_slide" active-text="轮播图"></el-switch>
+                        <el-switch v-model="ruleForm.is_top" active-text="置顶"></el-switch>
+                        <el-switch v-model="ruleForm.is_hot" active-text="推荐"></el-switch>
                     </el-form-item>
                     <el-form-item label="上传封面" prop="type">
                             <el-upload 
                                 class="upload-demo" 
-                                action="https://jsonplaceholder.typicode.com/posts/" 
-                                :on-preview="handlePreview" :on-remove="handleRemove"
-                                :file-list="fileList2" 
-                                list-type="picture">
+                                :action="uploadImgUrl" 
+                                :file-list="ruleForm.imgList" 
+                                list-type="picture"
+                                :on-success="fileImgUpload">
                                 <el-button size="small" type="primary">点击上传</el-button>
-                                    <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                    <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
                             </el-upload>
                     </el-form-item>
                     <el-form-item label="上传附件" prop="type">
                             <el-upload
                                 class="upload-demo"
-                                action="https://jsonplaceholder.typicode.com/posts/"
-                                :on-preview="handlePreview"
-                                :on-remove="handleRemove"
+                                :action="uploadFileUrl"
                                 multiple
                                 :limit="3"
-                                :on-exceed="handleExceed"
-                                :file-list="fileList">
+                                :file-list="ruleForm.fileList"
+                                :on-success="fileFileUpload">
                                 <el-button size="small" type="primary">点击上传</el-button>
-                                <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+                                <!-- <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div> -->
                             </el-upload>
                     </el-form-item>
 
@@ -71,8 +69,9 @@
                     <el-form-item label="内容摘要 " prop="zhaiyao">
                         <el-input type="textarea" v-model="ruleForm.zhaiyao"></el-input>
                     </el-form-item>
-                    <el-form-item label="详细信息" prop="content">
-                        <el-input type="textarea" v-model="ruleForm.content"></el-input>
+                    <el-form-item label="详细信息" prop="content" class="detailInfo">
+                        <quill-editor v-model="ruleForm.content"></quill-editor>
+                        <!-- <el-input type="textarea" v-model="ruleForm.content"></el-input> -->
                     </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="submitForm('ruleForm')">提交保存</el-button>
@@ -85,40 +84,38 @@
 </template>
 
 <script>
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+import { quillEditor } from 'vue-quill-editor'
 export default {
+  components: {
+    quillEditor
+  },
   data() {
     return {
+        uploadImgUrl:this.$domain+this.$api.atImg,
+        uploadFileUrl:this.$domain+this.$api.atFile,
       id:this.$route.params.id,
       ruleForm: {
-                title: "Hazzys哈吉斯2017新款男士长袖衬衫纯棉修身英伦衬衫显瘦商务衬衣",
-                sub_title: "英伦轻奢 专柜同款 为不凡而生",
-                category_id: "98",
-                goods_no: "NZ0000000002",
-                category_id: "151",
-                stock_quantity: 200,
-                market_price: 1000,
-                sell_price: 800,
-                status: true,
-                is_slide: true,
+                 title: "",
+                sub_title: "",
+                category_id: "",
+                goods_no: "",
+                category_id: "",
+                stock_quantity: null,
+                market_price: null,
+                sell_price: null,
+                status: false,
+                is_slide: false,
                 is_top: false,
-                is_hot: true,
-                zhaiyao: "Hazzys哈吉斯2017",
-                content: "<p><strong>产品参数：</strong></p>",
+                is_hot: false,
+                zhaiyao: "",
+                content: "",
                 imgList: [
-                    {
-                        name: "wTgAWDLpQReTQ-ZOMdlAk4vF.jpg",
-                        url: "http://139.199.192.48:6060/imgs/wTgAWDLpQReTQ-ZOMdlAk4vF.jpg",
-                        shorturl: "/imgs/wTgAWDLpQReTQ-ZOMdlAk4vF.jpg"
-                    }
                     ],
-                fileList: [
-                    {
-                        uid: 34,
-                        name: "HN5d4_wrbsUk5KQNjzYSGGwm.jpg",
-                        url: "http://139.199.192.48:6060/imgs/HN5d4_wrbsUk5KQNjzYSGGwm.jpg",
-                        shorturl: "/imgs/HN5d4_wrbsUk5KQNjzYSGGwm.jpg"
-                    }
-                    ]
+                fileList: []
             },
       rules: {
         title: [
@@ -134,6 +131,14 @@ export default {
     };
   },
   methods:{
+      /* 图片上传成功后的回调函数 */
+      fileImgUpload(response){
+          console.log(response);
+        this.ruleForm.imgList=[response];
+      },
+      fileFileUpload(response){
+          this.ruleForm.fileList.push(response);
+      },
       /* 获取编辑页面 */
         getEditPage(){
           this.$http.get(this.$api.gsDetail+this.id).then(rsp=>{
@@ -201,8 +206,16 @@ export default {
             border: 1px solid #ddd;
         }
         &_form{
-            
-            width: 500px;            
+            width: 650px;  
+            .ql-editor{
+                height: 200px;
+            }
+            .ql-toolbar{
+                line-height: 20px;
+            }
+            .detailInfo(){
+                height: 350px;
+            }
         }
     }
 </style>

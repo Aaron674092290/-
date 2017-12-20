@@ -12,10 +12,11 @@ import AppComponent from "./component/App.vue";
 /*  2.2导入路由设置*/
 import RouterConfig from "./router/index.js"; //写一个目录会自动找index.js
 /* 3导入配置后的axios与api，注入到vue的原型当中，这样所有的组件就可以通过this调用了 */
-import api from "./js/api_config";
+import api, { domain } from "./js/api_config";
 import axios from "./js/axios_config";
 Vue.prototype.$http = axios;
 Vue.prototype.$api = api;
+Vue.prototype.$domain = domain;
 const router = new VueRouter(RouterConfig);
 import routerGuard from "./router/guard.js";
 router.beforeEach(routerGuard);
